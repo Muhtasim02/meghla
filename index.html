@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apology Animation</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      color: #fff;
+      text-align: center;
+      overflow: hidden;
+      background: #0a1e3c;  /* Dark blue background */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .container {
+      position: relative;
+      width: 90%;
+      height: 90%;
+      max-width: 600px;
+      max-height: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* "SORRY" in ash color at the top-left corner */
+    .sorry-text {
+      position: absolute;
+      top: 20px;
+      right: 700px;
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #B0B0B0;  /* Ash color */
+      letter-spacing: 5px;
+    }
+
+    /* Red Heart positioned at the top-right corner, opposite of "SORRY" */
+    .heart {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      background-color: red;
+      transform: rotate(-45deg);
+      animation: beat 2s infinite, colorChange 8s infinite;
+    }
+
+    .heart::before,
+    .heart::after {
+      content: '';
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background-color: rgb(158, 26, 26);
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -60px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: 60px;
+    }
+
+    /* Heart beat animation */
+    @keyframes beat {
+      0%, 100% {
+        transform: scale(1) rotate(-45deg);
+      }
+      50% {
+        transform: scale(1.1) rotate(-45deg);
+      }
+    }
+
+    /* Color change animation for the heart */
+    @keyframes colorChange {
+      0%, 100% {
+        background-color: rgb(158, 26, 26);
+      }
+      50% {
+        background-color: rgb(158, 26, 26);
+      }
+    }
+
+    /* Apology (Letter Style) */
+    .apology-container {
+      width: 80%;
+      max-width: 600px;
+      margin-top: 30px;
+      display: none; /* Hidden by default */
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+      transition: max-height 1s ease, padding 1s ease;
+      max-height: 0;
+      overflow: hidden;
+    }
+
+    .apology-container.open {
+      display: block;
+      max-height: 500px;
+      padding: 20px;
+    }
+
+    .apology {
+      font-size: 1.2rem;
+      line-height: 1.8;
+    }
+
+    /* Button styling with ash black color */
+    .msg-button {
+      background-color: #4b4b4b; /* Ash black */
+      color: white;
+      border: none;
+      padding: 15px 25px;
+      font-size: 1.2rem;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 30px;
+      transition: background-color 0.3s ease;
+    }
+
+    .msg-button:hover {
+      background-color: #333333; /* Darker ash black on hover */
+    }
+
+    /* Time display in top-left corner */
+    .time-display {
+      position: absolute;
+      top: 20px;
+      left: 700px;
+      background-color: #B0B0B0; /* Ash background */
+      color: white;
+      padding: 10px;
+      font-size: 1.2rem;
+      border: 2px solid white;
+      border-radius: 5px;
+    }
+
+    /* Responsive design for smaller screens */
+    @media (max-width: 768px) {
+      .sorry-text {
+        font-size: 2rem;
+        top: 10px;
+        left: 10px;
+      }
+
+      .heart {
+        width: 100px;
+        height: 100px;
+      }
+
+      .msg-button {
+        padding: 12px 20px;
+        font-size: 1rem;
+      }
+
+      .apology-container {
+        width: 80%;
+        max-width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .sorry-text {
+        font-size: 1.5rem;
+      }
+
+      .heart {
+        width: 80px;
+        height: 80px;
+      }
+
+      .msg-button {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+      }
+
+      .apology-container {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- "SORRY" Text in Ash color -->
+    <div class="sorry-text">SORRY MEGHLA</div>
+
+    <!-- Red Heart positioned at the top-right corner, opposite of "SORRY" -->
+    <div class="heart"></div>
+
+    <!-- Button to trigger apology message below the heart -->
+    <button class="msg-button" id="msg-button">MSG</button>
+
+    <!-- Apology Letter (hidden initially) -->
+    <div class="apology-container" id="apology-container">
+      <div class="apology">
+        Dear Meghla,<br>
+        I am very sorry. Now I can understand my faults,<br>
+        but it's too late.<br>
+        Don't know if I can meet you anymore.<br>
+        Wherever you are, be safe.
+      </div>
+    </div>
+    
+    <!-- Time display -->
+    <div class="time-display" id="time-display"></div>
+  </div>
+
+  <script>
+    // Function to update the time every second
+    const msgButton = document.getElementById('msg-button');
+    const apologyContainer = document.getElementById('apology-container');
+
+    msgButton.addEventListener('click', () => {
+      apologyContainer.classList.toggle('open');
+    });
+    function updateTime() {
+      const timeDisplay = document.getElementById('time-display');
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, '0');
+      const minutes = now.getMinutes().toString().padStart(2, '0');
+      const seconds = now.getSeconds().toString().padStart(2, '0');
+      const timeString = `${hours}:${minutes}:${seconds}`;
+      timeDisplay.textContent = timeString;
+    }
+
+    // Call the updateTime function every second
+    setInterval(updateTime, 1000);
+    updateTime(); // Call once to display immediately
+  </script>
+</body>
+</html>
